@@ -1,5 +1,5 @@
 import gi
-import CaixaCor
+import caixaCor
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,Gdk,GObject
 
@@ -12,17 +12,17 @@ class EjemploBox(Gtk.Window):
         caixa = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing = 5)
         caixav1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing = 5)
 
-        caixav1.pack_start(CaixaCor.CaixaCor('red'), True, True, 2)
-        caixav1.pack_start(CaixaCor.CaixaCor('yellow'), True, True, 2)
-        caixav1.pack_start(CaixaCor.CaixaCor('red'), True, True, 2)
+        caixav1.pack_start(caixaCor.CaixaCor('red'), True, True, 2)
+        caixav1.pack_start(caixaCor.CaixaCor('yellow'), True, True, 2)
+        caixav1.pack_start(caixaCor.CaixaCor('red'), True, True, 2)
 
         caixa.pack_start(caixav1, True, True, 5)
-        caixa.pack_start(CaixaCor.CaixaCor('grey'), True, True, 2)
+        caixa.pack_start(caixaCor.CaixaCor('grey'), True, True, 2)
 
         caixav2=Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing = 10)
-        caixav2.pack_start(CaixaCor.CaixaCor('black'), True, True, 2)
-        caixav2.pack_start(CaixaCor.CaixaCor('red'), True, True, 2)
-        caixav2.pack_start(CaixaCor.CaixaCor('yellow'), True, True, 2)
+        caixav2.pack_start(caixaCor.CaixaCor('black'), True, True, 2)
+        caixav2.pack_start(caixaCor.CaixaCor('red'), True, True, 2)
+        caixav2.pack_start(caixaCor.CaixaCor('yellow'), True, True, 2)
 
         caixa.pack_start(caixav2, True, True, 5)
 
