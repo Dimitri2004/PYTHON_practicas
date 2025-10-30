@@ -19,6 +19,7 @@ class EjemploBox(Gtk.Window):
         caixa.pack_start(caixav1, True, True, 5)
         caixa.pack_start(caixaCor.CaixaCor('grey'), True, True, 2)
 
+
         caixav2=Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing = 10)
         caixav2.pack_start(caixaCor.CaixaCor('black'), True, True, 2)
         caixav2.pack_start(caixaCor.CaixaCor('red'), True, True, 2)
