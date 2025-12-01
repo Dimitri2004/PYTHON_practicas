@@ -16,11 +16,6 @@ class InterfazEjemplo(Gtk.Window):
         vbox_main = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.add(vbox_main)
 
-
-
-
-
-
         # === FRAME PRINCIPAL ===
         frame_main = Gtk.Frame.new("PanelCaption")
         frame_main.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
@@ -137,11 +132,7 @@ class InterfazEjemplo(Gtk.Window):
         combo.pack_start(renderer2,False)
         combo.add_attribute(renderer2,"text",0)
         combo.connect("changed",self.on_combo_changed)
-
-
         self.text_area = Gtk.TextView()
-
-
 
 
         grid_bottom.attach(entry_text, 0, 0, 1, 1)
@@ -173,7 +164,7 @@ class InterfazEjemplo(Gtk.Window):
             modelo=combo.get_model()
             elemento=modelo [punteiro][1]
             bufer = self.text_area.get_buffer()
-            bufer.insert(bufer.get_end_iter(),"\nSeleccionado o elemento "+elemento + " do ComboBox")
+            bufer.insert(bufer.get_end_iter(),"\nSeleccionado o elemento "+ elemento + " do ComboBox")
 
 
 if __name__ == "__main__":
