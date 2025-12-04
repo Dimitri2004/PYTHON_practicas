@@ -4,37 +4,61 @@ from gi.repository import Gtk,Gdk,GObject
 
 
 class EjemploTree(Gtk.Window):
+
+
     def __init__(self):
         super().__init__()
         self.set_title("Ejemplo de Treeview en árbol")
 
+
+
+        self.filtradoXenero=None
         caixav = Gtk.Box(orientation= Gtk.Orientation.VERTICAL, spacing= 6)
+
         modelo = Gtk.ListStore(str,str,int,str,bool)
         listaUsuarios = [('1234H','Ana Perez',34,'Muller',False),
-                         ('4321T','Pepe Diz',78,'Home',True)]
+                         ('4321T','Pepe Diz',78,'Home',True),
+                         ('5678U','Rosa Gil',56,'Muller',False),
+                         ('8765R','Juan Vila',43,'Home',False),
+                         ('4567P','Iris Vazquez',39,'Outros',True)]
 
         for usuario in listaUsuarios:
             modelo.append(usuario)
+        modelo_filtrado =modelo.filter_new()
+        modelo_filtrado.set_visible_func(self.filtro_usuarios_xenero)
 
         trvVista = Gtk.TreeView(model=modelo)
 
         for i, tituloColumna in enumerate (('Dni','Nome')):
             celda = Gtk.CellRendererText()
             celda.set_property("editable",True)
-            celda.connect("edited",self.on_celdaTexto_edited,i)
+            celda.connect("edited",self.on_celdaNome_edited,i,modelo)
             columna = Gtk.TreeViewColumn(tituloColumna,celda,text = i)
             trvVista.append_column(columna)
-
         celda = Gtk.CellRendererProgress()
         columna = Gtk.TreeViewColumn('Edade',celda, value = 2)
         trvVista.append_column(columna)
 
-        celda = Gtk.CellRendererText()
+        modeloComboXenero = Gtk.ListStore(str)
+        modeloComboXenero.append(("Home",))
+        modeloComboXenero.append(("Muller",))
+        modeloComboXenero.append(("Outros",))
+        modeloComboXenero.append(("Decepción",))
+
+        celda = Gtk.CellRendererCombo()
+
+        celda.set_property("editable",True)
+        celda.props.model = modeloComboXenero
+        celda.set_property("text-column",0)
+        celda.set_property("has-entry",False)
+        celda.connect("changed",self.on_xenero_changed,modelo)
+
         columna = Gtk.TreeViewColumn('Xénero', celda, text=3)
         trvVista.append_column(columna)
 
         celda = Gtk.CellRendererToggle()
-        celda.connect("toggled",self.on_celdaFalecido_toggle, modelo)
+        celda.set_property("sensitive",True)
+        celda.connect("toggled", self.on_celdaFalecido_toogled,modelo)
         columna = Gtk.TreeViewColumn('Falecido',celda,active=4)
         trvVista.append_column(columna)
 
@@ -44,12 +68,18 @@ class EjemploTree(Gtk.Window):
         self.connect("delete_event",Gtk.main_quit)
         self.show_all()
 
-    def on_celdaFalecido_toggle(self, check, fila, modelo):
-        print("Clicamos na fila ",str(fila))
+    def on_celdaFalecido_toogled(self,celda,fila,modelo):
+        print('Clicamos en ',fila)
         modelo [fila][4] = not modelo [fila][4]
 
-    def on_celdaTexto_edited(self, cadroTexto, fila,texto, numero):
-        print("Editamos o ", "nome" if numero == 1 else "dni")
+    def on_celdaNome_edited(self,celda,fila,cadroTexto,numero,modelo):
+        print("Editamos: ",numero,fila,cadroTexto)
+        if numero == 1:
+            modelo[fila][1] = cadroTexto
+
+    def on_xenero_changed(self,celda,fila,indx,modeloTab):
+        modeloTab[fila][3] = celda.props.model[indx][0]
+
 
 
 if __name__ == "__main__":
