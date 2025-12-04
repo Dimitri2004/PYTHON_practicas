@@ -1,3 +1,5 @@
+
+
 import  gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk,Gdk,GObject
@@ -13,6 +15,7 @@ class EjemploTree(Gtk.Window):
 
 
         self.filtradoXenero=None
+        self.filtradoEdade=None
         caixav = Gtk.Box(orientation= Gtk.Orientation.VERTICAL, spacing= 6)
 
         modelo = Gtk.ListStore(str,str,int,str,bool)
@@ -25,9 +28,11 @@ class EjemploTree(Gtk.Window):
         for usuario in listaUsuarios:
             modelo.append(usuario)
         modelo_filtrado =modelo.filter_new()
-        modelo_filtrado.set_visible_func(self.filtro_usuarios_xenero)
+        modelo_filtrado.set_visible_func(self.filtro_usuarios_edade)
 
-        trvVista = Gtk.TreeView(model=modelo)
+
+
+        trvVista = Gtk.TreeView(model=modelo_filtrado)
 
         for i, tituloColumna in enumerate (('Dni','Nome')):
             celda = Gtk.CellRendererText()
@@ -64,6 +69,37 @@ class EjemploTree(Gtk.Window):
 
         caixav.pack_start(trvVista, True, True, 5)
 
+        caixaH = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,spacing=4)
+        rbtHome = Gtk.RadioButton(label='Home')
+        rbtMuller = Gtk.RadioButton.new_with_label_from_widget(rbtHome,label='Muller')
+        rbtOutros = Gtk.RadioButton.new_with_label_from_widget(rbtHome,label='Outros')
+        rbtTodos = Gtk.RadioButton.new_with_label_from_widget(rbtHome,label='Todos')
+
+
+        caixaH.pack_start(rbtHome,False,False,2)
+        caixaH.pack_start(rbtMuller,False,False,2)
+        caixaH.pack_start(rbtOutros,False,False,2)
+        caixaH.pack_start(rbtTodos,False,False,2)
+
+        rbtHome.connect("toggled",self.on_xeneroToggled,modelo_filtrado,modelo,i)
+        rbtMuller.connect("toggled",self.on_xeneroToggled,modelo_filtrado,modelo,i)
+        rbtOutros.connect("toggled",self.on_xeneroToggled,modelo_filtrado,modelo,i)
+        rbtTodos.connect("toggled",self.on_xeneroToggled,modelo_filtrado,modelo,i)
+
+
+
+
+        caixav.pack_start(caixaH,True,True,0)
+
+        scaleEdade = Gtk.Scale.new_with_range(orientation=Gtk.Orientation.HORIZONTAL,min=1, max=100, step=1)
+        scaleEdade.connect("change-value", self.on_scaleEdade_changedValue,modelo_filtrado)
+        caixav.pack_start(scaleEdade, True, True, 0)
+
+
+
+
+
+
         self.add(caixav)
         self.connect("delete_event",Gtk.main_quit)
         self.show_all()
@@ -80,6 +116,25 @@ class EjemploTree(Gtk.Window):
     def on_xenero_changed(self,celda,fila,indx,modeloTab):
         modeloTab[fila][3] = celda.props.model[indx][0]
 
+    def filtro_usuarios_xenero(self,modelo,fila,datos):
+        if  self.filtradoXenero is None or self.filtradoXenero =="None":
+            return True
+        else:
+            return modelo[fila][3] == self.filtradoXenero
+
+    def on_xeneroToggled(self,rbtElixido,modelo_filtrado,modelo,fila):
+        if rbtElixido.get_active():
+            self.filtradoXenero = rbtElixido.get_label()
+            if rbtElixido=="Todos":
+                self.filtradoXenero=modelo [fila][3]
+            #print(rbtElixido.get_label())
+            modelo_filtrado.refilter()
+    def filtro_usuarios_edade(self,modelo,fila,datos):
+        return modelo[fila][2] <= self.filtradoEdade
+
+    def on_scaleEdade_changedValue(self,control,scroll,valor,modelo_filtrado):
+        self.filtradoEdade=valor
+        modelo_filtrado.refilter()
 
 
 if __name__ == "__main__":
